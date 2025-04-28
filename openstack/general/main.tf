@@ -12,7 +12,12 @@ variable "ssh-public-key-path" {
   sensitive = false
 }
 
-# variable "os_project_id" { type = string }
+variable "network-0001-name" {
+  type = string
+  default = "network-0001.os-cloud-0001.vty-valentin-vty.net"
+}
+
+#variable "os_project_id" { type = string }
 
 terraform {
   required_providers {
@@ -34,20 +39,24 @@ provider "openstack" {
 #}
 
 ## Get external network
-data "openstack_networking_network_v2" "external-network" {
+data openstack_networking_network_v2 "external-network" {
   name = "PUBLICNET"
 }
 
+
+resource openstack_networking_network_v2 "network-0001" {
+  name = var.network-0001-name}
+
 ## Create router
-resource "openstack_networking_router_v2" "external-router" {
-  provider = "openstack"
+resource openstack_networking_router_v2 "external-router" {
+  provider = openstack
   name = "external-router"
   admin_state_up = true
   external_network_id = data.openstack_networking_network_v2.external-network.id
 }
 
 ## Create internal network
-resource "openstack_networking_network_v2" "internal-network" {
+resource openstack_networking_network_v2 "internal-network" {
   name = "internal-network"
   admin_state_up = true
   external = false
@@ -55,7 +64,7 @@ resource "openstack_networking_network_v2" "internal-network" {
 }
 
 ## Create internal subnet
-resource "openstack_networking_subnet_v2" "internal-subnet" {
+resource openstack_networking_subnet_v2 "internal-subnet" {
   name = "internal-subnet"
   network_id = openstack_networking_network_v2.internal-network.id
   cidr = "172.16.0.0/16"
@@ -68,28 +77,28 @@ resource "openstack_networking_subnet_v2" "internal-subnet" {
 }
 
 ## Create internal router interface
-resource "openstack_networking_router_interface_v2" "internal-router-interface" {
+resource openstack_networking_router_interface_v2 "internal-router-interface" {
   router_id = openstack_networking_router_v2.external-router.id
   subnet_id = openstack_networking_subnet_v2.internal-subnet.id
 }
 
 ## Create security group for public ssh
-resource "openstack_networking_secgroup_v2" "public-ssh" {
+resource openstack_networking_secgroup_v2 "public-ssh" {
   name = "public-ssh"
 }
 
 ## Create security group for public icmp
-resource "openstack_networking_secgroup_v2" "public-icmp" {
+resource openstack_networking_secgroup_v2 "public-icmp" {
   name = "public-icmp"
 }
 
 ## Create security group for public web
-resource "openstack_networking_secgroup_v2" "public-web" {
+resource openstack_networking_secgroup_v2 "public-web" {
   name = "public-web"
 }
 
 ## Create security group rule for public-ssh
-resource "openstack_networking_secgroup_rule_v2" "public-ssh" {
+resource openstack_networking_secgroup_rule_v2 "public-ssh" {
   direction = "ingress"
   ethertype = "IPv4"
   security_group_id = openstack_networking_secgroup_v2.public-ssh.id
@@ -100,7 +109,7 @@ resource "openstack_networking_secgroup_rule_v2" "public-ssh" {
 }
 
 ## Create security group rule for public icmp
-resource "openstack_networking_secgroup_rule_v2" "public-icmp" {
+resource openstack_networking_secgroup_rule_v2 "public-icmp" {
   direction = "ingress"
   ethertype = "IPv4"
   security_group_id = openstack_networking_secgroup_v2.public-icmp.id
@@ -109,7 +118,7 @@ resource "openstack_networking_secgroup_rule_v2" "public-icmp" {
 }
 
 ## Create security group rule for public http
-resource "openstack_networking_secgroup_rule_v2" "public-http" {
+resource openstack_networking_secgroup_rule_v2 "public-http" {
   direction = "ingress"
   ethertype = "IPv4"
   security_group_id = openstack_networking_secgroup_v2.public-web.id
@@ -120,7 +129,7 @@ resource "openstack_networking_secgroup_rule_v2" "public-http" {
 }
 
 ## Create security group rule for public https
-resource "openstack_networking_secgroup_rule_v2" "public-https" {
+resource openstack_networking_secgroup_rule_v2 "public-https" {
   direction = "ingress"
   ethertype = "IPv4"
   security_group_id = openstack_networking_secgroup_v2.public-web.id
@@ -131,13 +140,13 @@ resource "openstack_networking_secgroup_rule_v2" "public-https" {
 }
 
 ## Keypair
-resource "openstack_compute_keypair_v2" "public-key" {
+resource openstack_compute_keypair_v2 "public-key" {
   name = "public-key"
   public_key = file(var.ssh-public-key-path)
 }
 
 ## Create network port for bastion server
-resource "openstack_networking_port_v2" "bastion" {
+resource openstack_networking_port_v2 "bastion" {
   name = "bastion"
   network_id = openstack_networking_network_v2.internal-network.id
   admin_state_up = true
@@ -150,7 +159,7 @@ resource "openstack_networking_port_v2" "bastion" {
 }
 
 ## Create bastion instance
-resource "openstack_compute_instance_v2" "bastion" {
+resource openstack_compute_instance_v2 "bastion" {
   name = "bastion-server.internal"
   image_name = "Ubuntu-24.04"
   flavor_name = "t1.small"
@@ -164,7 +173,7 @@ resource "openstack_compute_instance_v2" "bastion" {
 }
 
 ## Create floating ip for bastion server
-resource "openstack_networking_floatingip_v2" "bastion" {
+resource openstack_networking_floatingip_v2 "bastion" {
   pool = "PUBLICNET"
   port_id = openstack_networking_port_v2.bastion.id
 }
