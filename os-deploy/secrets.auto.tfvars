@@ -1,0 +1,8 @@
+os_user_name = ""
+os_tenant_name = ""
+os_user_password = ""
+os_auth_url = ""
+os_region = ""
+os_user_domain_name = ""
+os_project_domain_name = ""
+os_domain_name = ""
