@@ -413,19 +413,3 @@ resource "openstack_networking_secgroup_rule_v2" "sg-0007-rule-0004" {
   port_range_max = "443"
   remote_ip_prefix = "::/0"
 }
-
-resource "openstack_networking_port_v2" "network-0001-subnet-0003-port-0001" {
-  name = "port-0001.subnet-0003.${var.network-0001-name}"
-  network_id = openstack_networking_network_v2.network-0001.id
-  admin_state_up = true
-  security_group_ids = [openstack_networking_secgroup_v2.sg-0001.id]
-  fixed_ip {
-    subnet_id = openstack_networking_subnet_v2.network-0001-subnet-0003.id
-  }
-}
-
-resource "openstack_networking_floatingip_v2" "ext-network-0001-flip-0001" {
-  pool = data.openstack_networking_network_v2.ext-network-0001.name
-  subnet_id = openstack_networking_subnet_v2.ext-network-0001-subnet-0001.id
-  port_id = openstack_networking_port_v2.network-0001-subnet-0003-port-0001.id
-}
