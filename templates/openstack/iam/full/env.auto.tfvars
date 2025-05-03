@@ -1,0 +1,6 @@
+domain-0001-name = ""
+domain-0001-project-0001-name = ""
+domain-0001-user-0001-name = ""
+domain-0001-user-0001-email = ""
+domain-0001-user-0001-password = ""
+domain-0001-role-0001-name = ""
