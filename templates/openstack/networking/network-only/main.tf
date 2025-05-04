@@ -19,18 +19,9 @@ variable "os_user_domain_name" { type = string }
 variable "os_project_domain_name" { type = string }
 variable "os_domain_name" { type = string }
 
-variable "swift-bucket-0001-name" {
+variable "network-0001-name" {
   type = string
-  default = "s3-0001.pr-0001.os-cloud-0001"
-}
-
-variable "swift-bucket-0001-readrole-0001" {
-  type = string
-  default = "rl-0001-s3-read-0001"
-}
-variable "swift-bucket-0001-writerole-0001" {
-  type = string
-  default = "rl-0001-s3-write-0001"
+  default = "network-0001.os-cloud-0001.vty-valentin-vty.net"
 }
 
 provider "openstack" {
@@ -57,9 +48,8 @@ provider "openstack" {
 #}
 
 
-resource "openstack_objectstorage_container_v1" {
-  name = var.swift-bucket-0001-name
-  versioning = true
-  container_read = var.swift-bucket-0001-readrole-0001
-  container_write = var.swift-bucket-0001-writerole-0001
+resource "openstack_networking_network_v2" "network-0001" {
+  name = var.network-0001-name
+  admin_state_up = "true"
+  shared = "true"
 }

@@ -18,5 +18,17 @@
 ## Templates
 - [Amazon Web Services (AWS)](/templates/aws/)
 - [OpenStack (OS)](/templates/openstack/)
+    - [Keystone](/templates/openstack/iam/)
+        - [Full (Domain, Project, User, Role)](/templates/openstack/iam/full/)
+        - [Domain only](/templates/openstack/iam/domain-only/)
+    - [Nova](/templates/openstack/compute/)
+    - [Neutron](/templates/openstack/networking/)
+        - [Full (Int. and Ext. Network, Subnets, Routers, Security Groups)](/templates/openstack/networking/full/)
+        - [Network only](/templates/openstack/networking/network-only/)
+        - [Int. Network and Subnets](/templates/openstack/networking/int-net-subnet/)
+        - [Int. Network, Subnets, Router](/templates/openstack/networking/int-net-subnet-extcon/)
+    - [Storage](/templates/openstack/storage/)
+
+
 - [OVH](/templates/ovh/)
 - [Environment](/templates/env/)
