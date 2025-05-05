@@ -14,7 +14,7 @@
     - [] [Bastion 0002 (No ingress traffic, Cloudflare Zero Trust)](/os-deploy/bastion-0002/)
     - [x] [Forgejo 0001 (ACME, Lets Encrypt Certs)](/os-deploy/forgejo-0001/)
     - [] [FRR 0001 (FRR instance only, no network env)](/os-deploy/frr-0001/)
-    - [] [IPFS 0001](/os-deploy/ipfs-0001/)
+    - [x] [IPFS 0001 (No ingress traffic, single IPFS node)](/os-deploy/ipfs-0001/)
     - [x] [Network 0001 (Int. Network with outside connectivity (Dual-Stack))](/os-deploy/network-0001/)
     - [] [Network 0002](/os-deploy/network-0002/)
     - [] [Network 0003](/os-deploy/network-0003/)

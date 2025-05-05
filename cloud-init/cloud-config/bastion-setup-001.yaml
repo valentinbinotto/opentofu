@@ -1,0 +1,32 @@
+#cloud-config
+fqdn: ${var.instance-0001-cloudinit-fqdn}
+create_hostname_file: true
+prefer_fqdn_over_hostname: true
+repo_update: true
+repo_upgrade: all
+manage_resolv_conf: true
+resolv_conf:
+  domain: ${var.instance-0001-cloudinit-dnsdomain}
+  nameservers: [1.1.1.1, 1.0.0.1]
+ssh_pwauth: false
+ssh_deletekeys: true
+disable_root: true
+ssh_authorized_keys: [${var.keypair-0001-pubkey}]
+timezone: US/Eastern
+users:
+  - name: ${var.instance-0001-cloudinit-username}
+    gecos: ${var.instance-0001-cloudinit-userfullname}
+    primary_group: ${var.instance-0001-cloudinit-username}
+    shell: /bin/bash
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    lock_passwd: true
+    ssh_authorized_keys:
+      - ${var.keypair-0001-pubkey}
+packages:
+- git
+- curl
+- wget
+- openstack-clients
+- vim
+- awscli
+- tmux

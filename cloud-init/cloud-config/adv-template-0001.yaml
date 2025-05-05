@@ -1,0 +1,98 @@
+#cloud-config
+fqdn: host-0001.oscloud
+create_hostname_file: true
+prefer_fqdn_over_hostname: true
+
+repo_update: true
+repo_upgrade: all
+
+manage_resolv_conf: true
+resolv_conf:
+  domain: os-cloud-0001.vty-valentin-vty.net
+  nameservers: [1.1.1.1, 1.0.0.1]
+  searchdomains: [os-cloud-0001.vty-valentin-vty.net]
+  
+ssh_pwauth: false
+ssh_deletekeys: true
+disable_root: true
+ssh_authorized_keys: [ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBUC8XLXa/zVz0AVj7/Qrh6jH1bj6ibk9JxIZOthgUse mhovu@MacBook-Air-von-MHOVU.local]
+
+timezone: US/Eastern
+
+
+users:
+  - default
+  - name: valentin
+    gecos: Valentin Binotto
+    primary_group: valentin
+    shell: /bin/bash
+    sudo: true
+    lock_passwd: true
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBUC8XLXa/zVz0AVj7/Qrh6jH1bj6ibk9JxIZOthgUse mhovu@MacBook-Air-von-MHOVU.local
+
+chpasswd:
+  expire: false
+  users:
+  - {name: user1, password: password1, type: text}
+  - {name: user2, password: $6$rounds=4096$5XYZ}
+
+ca_certs:
+  remove_defaults: false
+  trusted:
+  - |
+   -----BEGIN CERTIFICATE-----
+   YOUR_ORG_CA_CERT_HERE
+   -----END CERTIFICATE-----
+   
+network:
+  version: 2
+  ethernets:
+    id0:
+      match:
+        macaddress: '00:FF:AB:12:12:12'
+      dhcp4: true
+      addresses:
+        - 172.16.0.10/24
+        - 2001:1::1/64
+      gateway4: 172.16.0.1
+      gateway6: 2001:1::2
+      nameservers:
+        search: [os-cloud-0001.vty-valentin-vty.net]
+        addresses: [1.1.1.1]
+      routes:
+        - to: 172.17.0.0/24
+          via: 172.16.0.11
+          metric: 2
+          
+network:
+  version: 1
+  config:
+    - type: physical
+      name: interface0
+      mac_address: '00:FF:AB:12:12:12'
+      subnets:
+        - type: dhcp
+        - type: static
+          address: 172.16.0.10/24
+          gateway: 172.16.0.1
+          dns_nameservers:
+            - 1.1.1.1
+          dns_search:
+            - os-cloud-0001.vty-valentin-vty.net
+          routes:
+            - gateway: 172.16.0.11
+              netmask: 255.255.255.0
+              destination: 172.17.0.0
+              
+packages:
+- git
+- curl
+- wget
+- openstack-clients
+- vim
+- awscli
+
+runcmd:
+- [ sh, -c, "echo vbhost > /etc/hostname" ]
+- hostname vbhost

@@ -1,0 +1,67 @@
+#cloud-config
+fqdn: ${var.instance-0001-cloudinit-fqdn}
+create_hostname_file: true
+prefer_fqdn_over_hostname: true
+repo_update: true
+repo_upgrade: all
+manage_resolv_conf: true
+resolv_conf:
+  domain: ${var.instance-0001-cloudinit-dnsdomain}
+  nameservers: [1.1.1.1, 1.0.0.1]
+ssh_pwauth: false
+ssh_deletekeys: true
+disable_root: true
+ssh_authorized_keys: [${var.keypair-0001-pubkey}]
+timezone: US/Eastern
+users:
+  - name: ${var.instance-0001-cloudinit-username}
+    gecos: ${var.instance-0001-cloudinit-userfullname}
+    primary_group: ${var.instance-0001-cloudinit-username}
+    shell: /bin/bash
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    lock_passwd: true
+    ssh_authorized_keys:
+      - ${var.keypair-0001-pubkey}
+packages:
+- git
+- curl
+- wget
+- openstack-clients
+- vim
+- awscli
+- tmux
+
+write_files:
+  - path: /etc/systemd/system/ipfs.service
+    content: |
+      [Unit]
+      Description=InterPlanetary File System (IPFS) daemon
+
+      [Service]
+      ExecStart=/usr/local/bin/ipfs daemon
+      User=${var.instance-0001-cloudinit-username}
+      Group=${var.instance-0001-cloudinit-username}
+
+      RuntimeMaxSec=1800
+      Restart=on-failure
+
+      [Install]
+      WantedBy=default.target
+    permissions: '0644'
+    owner: 'root:root'
+
+  - path: /run/scripts/setup-ipfs.sh
+    content: |
+      #!/bin/bash
+      wget https://dist.ipfs.tech/kubo/v0.34.1/kubo_v0.34.1_linux-amd64.tar.gz
+      tar -xvzf kubo_v0.34.1_linux-amd64.tar.gz
+      bash kubo/install.sh
+      su -c "ipfs init" -s /bin/bash ${var.instance-0001-cloudinit-username}
+      systemctl daemon-reload
+      systemctl enable ipfs.service
+      systemctl start ipfs.service
+      ipfs pin add ${var.instance-0001-cloudinit-ipfscid}
+    permissions: '0774'
+
+runcmd:
+  - [ sh, "/run/scripts/setup-ipfs.sh" ]
