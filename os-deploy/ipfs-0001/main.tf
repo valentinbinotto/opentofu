@@ -26,7 +26,7 @@ variable "network-0001-name" {
 
 variable "sg-0001-name" {
   type = string
-  default = "sg-0001-forgejo-0001"
+  default = "sg-0001-ipfs-0001"
 }
 variable "keypair-0001-name" {
   type = string
@@ -50,7 +50,7 @@ variable "vol-0001-image" {
 }
 variable "instance-0001-name" {
   type = string
-  default = "forgejo-0001"
+  default = "ipfs-0001"
 }
 variable "instance-0001-flavor" {
   type = string
@@ -65,7 +65,7 @@ variable "instance-0001-admpasswd" {
 
 variable "instance-0001-cloudinit-fqdn" {
   type = string
-  default = "bastion-0001-net-0001.os-cloud-0001"
+  default = "ipfs-0001-net-0001.os-cloud-0001"
 }
 variable "instance-0001-cloudinit-dnsdomain" {
   type = string
@@ -78,6 +78,10 @@ variable "instance-0001-cloudinit-username" {
 variable "instance-0001-cloudinit-userfullname" {
   type = string
   default = "Valentin Binotto"
+}
+variable "instance-0001-cloudinit-ipfscid" {
+  type = string
+  default = "bafybeifx7yeb55armcsxwwitkymga5xf53dxiarykms3ygqic223w5sk3m"
 }
 
 
@@ -135,7 +139,7 @@ resource "openstack_blockstorage_volume_v3" "vol-0001" {
 }
 
 resource "openstack_networking_port_v2" "network-0001-port-0001" {
-  name = "${var.network-0001-name}-port-0001"
+  name = "${var.network-0001-name}-port-ipfs-0001"
   admin_state_up = true
   network_id = data.openstack_networking_network_v2.network-0001.id
   security_group_ids = [openstack_networking_secgroup_v2.sg-0001.id]

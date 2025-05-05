@@ -4,10 +4,12 @@
 - [Amazon Web Services (AWS)](/aws-deploy/)
     - [] [Bastion 0001 (SSH only with Elastic IP)](/aws-deploy/bastion-0001/)
     - [] [Bastion 0002 (No ingress traffic, Cloudflare Zero Trust)](/aws-deploy/bastion-0002/)
+    - [] [Bastion 0003 (No ingress traffic, SSM, CloudWatch)](/aws-deploy/bastion-0003/)
     - [] [Forgejo 0001 (ACME, Lets Encrypt Certs)](/aws-deploy/forgejo-0001/)
     - [] [Forgejo 0002 (Git running on AWS ECS Infrastructure)](/aws-deploy/forgejo-0002/)
     - [] [IPFS 0001](/aws-deploy/ipfs-0001/)
     - [] [Network-0001 (VPC, Subnets, Security Groups and IGW)](/aws-deploy/network-0001/)
+    - [] [Backup 0001 (Configure EC2 Snapshots and AWS Backup)](/aws-deploy/backup-0001/)
 
 - [OpenStack (OS)](/os-deploy/)
     - [x] [Bastion 0001 (SSH only with Floating IP)](/os-deploy/bastion-0001/)

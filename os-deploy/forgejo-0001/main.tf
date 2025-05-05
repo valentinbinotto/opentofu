@@ -192,7 +192,7 @@ resource "openstack_blockstorage_volume_v3" "vol-0001" {
 }
 
 resource "openstack_networking_port_v2" "network-0001-port-0001" {
-  name = "${var.network-0001-name}-port-0001"
+  name = "${var.network-0001-name}-port-forgejo-0001"
   admin_state_up = true
   network_id = data.openstack_networking_network_v2.network-0001.id
   security_group_ids = [openstack_networking_secgroup_v2.sg-0001.id]
@@ -303,5 +303,5 @@ resource "openstack_networking_floatingip_v2" "flip-0001" {
 
 resource "openstack_networking_floatingip_associate_v2" "flip-0001-assoc-0001" {
   floating_ip = openstack_networking_floatingip_v2.flip-0001.address
-  port_id = openstack_compute_instance_v2.instance-0001.network.0.port
+  port_id = openstack_networking_port_v2.network-0001-port-0001.id
 }
