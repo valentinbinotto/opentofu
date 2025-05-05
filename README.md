@@ -24,7 +24,7 @@
     - [] [Backup 0002 (Recover Nova Instance from Snapshot, Volume from Backup)](/os-deploy/backup-0002/)
 - [OVH](/ovh-deploy/)
 - [Multi-Cloud](/multicloud-deploy/)
-    - [] [Network-0001 (Connect OpenStack & AWS with Site-to-Site VPN)](/multicloud-deploy/network-0001/)
+    - [] [Network-0001 (Connect OpenStack & AWS with Site-to-Site VPN (IPv4 only))](/multicloud-deploy/network-0001/)
 
 ## Templates
 - [Amazon Web Services (AWS)](/templates/aws/)
